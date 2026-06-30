@@ -49,6 +49,30 @@ def load_data():
 df = load_data()
 
 # ─────────────────────────────────────────────
+#  ПРОВЕРКА ПАРОЛЯ
+# ─────────────────────────────────────────────
+def check_password():
+    """Показывает окно ввода пароля. Пускает дальше только при верном."""
+    def password_entered():
+        if st.session_state.get("password_input") == st.secrets.get("app_password"):
+            st.session_state["auth_ok"] = True
+            del st.session_state["password_input"]
+        else:
+            st.session_state["auth_ok"] = False
+
+    if st.session_state.get("auth_ok"):
+        return True
+
+    st.markdown("### 🔒 Вход в PSS Analytics")
+    st.text_input("Пароль", type="password", key="password_input",
+                  on_change=password_entered)
+    if st.session_state.get("auth_ok") is False:
+        st.error("Неверный пароль. Попробуй ещё раз.")
+    st.stop()
+
+check_password()
+
+# ─────────────────────────────────────────────
 #  ЗАГОЛОВОК
 # ─────────────────────────────────────────────
 st.title("📊 PSS Analytics — рынок Kaspi")
